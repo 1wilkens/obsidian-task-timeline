@@ -199,9 +199,12 @@
     justify-content: center;
 }
 
-.task-timeline-cb.is-overdue {
+.task-timeline-cb.is-overdue .task-timeline-cb-icon {
     color: var(--text-error, #e5484d);
-    border-color: var(--background-modifier-border);
+}
+
+.task-timeline-cb.is-unplanned .task-timeline-cb-icon {
+    color: var(--color-yellow, #e5b453);
 }
 
 .task-timeline-task.is-overdue .task-timeline-due-badge {
@@ -294,4 +297,59 @@
     color: var(--text-faint);
     padding: 32px 0;
     font-size: 14px;
+}
+
+/* ── Color modes ────────────────────────────────────────────── */
+
+/* warning + off: suppress accent coloring */
+.task-timeline[data-color="warning"] .task-timeline-accent,
+.task-timeline[data-color="off"] .task-timeline-accent {
+    color: var(--text-muted);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-filter.is-active,
+.task-timeline[data-color="off"] .task-timeline-filter.is-active {
+    border-color: var(--text-muted);
+    background-color: transparent;
+}
+
+.task-timeline[data-color="warning"] .task-timeline-section-date,
+.task-timeline[data-color="off"] .task-timeline-section-date {
+    color: var(--text-normal);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-cb:hover,
+.task-timeline[data-color="off"] .task-timeline-cb:hover {
+    border-color: var(--text-muted);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-task.is-done .task-timeline-cb,
+.task-timeline[data-color="off"] .task-timeline-task.is-done .task-timeline-cb {
+    background: var(--text-faint);
+    border-color: var(--text-faint);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-wikilink,
+.task-timeline[data-color="off"] .task-timeline-wikilink {
+    color: var(--text-normal);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-tag,
+.task-timeline[data-color="off"] .task-timeline-tag {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+/* off: additionally suppress overdue error coloring and unplanned warning coloring */
+.task-timeline[data-color="off"] .task-timeline-section-date.is-overdue {
+    color: var(--text-normal);
+}
+
+.task-timeline[data-color="off"] .task-timeline-cb.is-overdue .task-timeline-cb-icon,
+.task-timeline[data-color="off"] .task-timeline-cb.is-unplanned .task-timeline-cb-icon {
+    color: var(--text-faint);
+}
+
+.task-timeline[data-color="off"] .task-timeline-task.is-overdue .task-timeline-due-badge {
+    color: var(--text-muted);
 }

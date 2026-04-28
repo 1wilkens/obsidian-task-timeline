@@ -28,6 +28,7 @@ Passed via `input` when embedding the view:
 | `format` | `YYYY-MM-DD` | Daily notes filename format |
 | `inbox` | `""` | Path to inbox file whose tasks are always shown |
 | `taskSection` | `"Tasks"` | Heading used when creating tasks in a new daily note |
+| `color` | `"on"` | Coloring mode: `"on"` (full), `"warning"` (overdue only), `"off"` (none) |
 
 ## Design
 

@@ -11,7 +11,7 @@ const defaultFolder = app.vault.getConfig?.("newFileLocation") === "folder"
     ? (app.vault.getConfig?.("newFileFolderPath") || "")
     : "";
 const CONFIG = Object.assign(
-    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", taskSection: "Tasks", inbox: "" },
+    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", taskSection: "Tasks", inbox: "", color: "on" },
     input || {}
 );
 
@@ -153,6 +153,7 @@ const buckets = {
 // ── Build UI ───────────────────────────────────────────────────
 let activeFilter = "all";
 const root = dv.container.createEl("div", { cls: "task-timeline" });
+root.dataset.color = CONFIG.color;
 
 // — Header
 const header = root.createEl("div", { cls: "task-timeline-header" });
@@ -281,12 +282,14 @@ function renderList() {
 
         tasks.forEach((t, i) => {
             const isOverdue = t.eff && t.eff.isBefore(today, "day");
+            const isUnplanned = !t.eff;
             const isOnly = tasks.length === 1;
             const clsList = ["task-timeline-task"];
             if (isOnly)              clsList.push("is-only");
             else if (i === 0)        clsList.push("is-first");
             else if (i === tasks.length - 1) clsList.push("is-last");
-            if (isOverdue) clsList.push("is-overdue");
+            if (isOverdue)   clsList.push("is-overdue");
+            if (isUnplanned) clsList.push("is-unplanned");
             const row = section.createEl("div", { cls: clsList.join(" ") });
 
             // Checkbox circle
@@ -294,6 +297,9 @@ function renderList() {
             if (isOverdue) {
                 cb.classList.add("is-overdue");
                 cb.createEl("span", { cls: "task-timeline-cb-icon", text: "!" });
+            } else if (isUnplanned) {
+                cb.classList.add("is-unplanned");
+                cb.createEl("span", { cls: "task-timeline-cb-icon", text: "?" });
             }
             cb.addEventListener("click", async () => {
                 const f = app.vault.getAbstractFileByPath(t.path);
