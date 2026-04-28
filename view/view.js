@@ -1,12 +1,17 @@
 // Task Timeline – DataviewJS view for Obsidian
-// Usage: ```dataviewjs await dv.view("_tasks/view/view") ```
+//
+// Usage:
+//
+// ```dataviewjs
+// await dv.view("<path/to/view-repo>/view")
+// ```
 
 // ── Configuration ──────────────────────────────────────────────
 const defaultFolder = app.vault.getConfig?.("newFileLocation") === "folder"
     ? (app.vault.getConfig?.("newFileFolderPath") || "")
     : "";
 const CONFIG = Object.assign(
-    { folder: defaultFolder, format: "YYYY-MM-DD", tasksHeading: "Tasks", pages: "", inbox: "" },
+    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", tasksHeading: "Tasks", inbox: "" },
     input || {}
 );
 
