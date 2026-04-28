@@ -1,0 +1,297 @@
+/* Task Timeline – view/view.css */
+
+.task-timeline {
+    width: 100%;
+    padding: 8px 0;
+    font-family: var(--font-interface, -apple-system, BlinkMacSystemFont, sans-serif);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+
+.task-timeline-header {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.task-timeline-accent {
+    color: var(--interactive-accent);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.task-timeline-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-normal);
+    line-height: 1.2;
+}
+
+/* ── Filter buttons ─────────────────────────────────────────── */
+
+.task-timeline-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+.task-timeline-filter {
+    flex: 1;
+    max-width: 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 10px 8px;
+    min-height: 58px;
+    background: transparent;
+    border: 1px solid var(--background-modifier-border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+    font-family: inherit;
+}
+
+.task-timeline-filter:hover {
+    background-color: hsla(var(--interactive-accent-hsl), 0.06);
+}
+
+.task-timeline-filter.is-active {
+    border-color: var(--interactive-accent);
+    background-color: hsla(var(--interactive-accent-hsl), 0.08);
+}
+
+.task-timeline-filter-count {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-normal);
+    line-height: 1.2;
+}
+
+.task-timeline-filter-label {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ── Quick-add ──────────────────────────────────────────────── */
+
+.task-timeline-quick-add {
+    background: var(--background-secondary);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.task-timeline-qa-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.task-timeline-breadcrumb {
+    font-size: 12px;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.task-timeline-enter-icon {
+    flex-shrink: 0;
+    font-size: 13px;
+    color: var(--text-faint);
+    background: var(--background-modifier-border);
+    border-radius: 4px;
+    padding: 0 5px;
+    line-height: 1.5;
+}
+
+.task-timeline-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-normal);
+    font-size: 14px;
+    font-family: inherit;
+    padding: 4px 0;
+}
+
+.task-timeline-input::placeholder {
+    color: var(--text-faint);
+}
+
+/* ── Sections & date headers ────────────────────────────────── */
+
+.task-timeline-section + .task-timeline-section {
+    margin-top: 4px;
+}
+
+.task-timeline-section-date {
+    color: var(--interactive-accent);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 0 6px;
+}
+
+.task-timeline-section-date.is-overdue {
+    color: var(--text-error, #e5484d);
+}
+
+/* ── Task rows ──────────────────────────────────────────────── */
+
+.task-timeline-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    transition: opacity 0.25s;
+    position: relative;
+}
+
+/* Connecting line — two segments that skip the circle */
+.task-timeline-task::before,
+.task-timeline-task::after {
+    content: '';
+    position: absolute;
+    left: 9px;
+    width: 1px;
+    background: var(--background-modifier-border);
+}
+
+.task-timeline-task::before { top: 0;    height: 10px; } /* task-top → circle-top  */
+.task-timeline-task::after  { top: 30px; bottom: 0;   } /* circle-bottom → task-bottom */
+
+.task-timeline-task.is-only::before,
+.task-timeline-task.is-only::after  { display: none; }
+.task-timeline-task.is-first::before { display: none; }
+.task-timeline-task.is-last::after   { display: none; }
+
+.task-timeline-task.is-done {
+    opacity: 0.3;
+}
+
+.task-timeline-task.is-done .task-timeline-task-text {
+    text-decoration: line-through;
+}
+
+/* Checkbox */
+
+.task-timeline-cb {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--text-faint);
+    border-radius: 50%;
+    margin-top: 2px;
+    cursor: pointer;
+    transition: border-color 0.15s, background-color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-timeline-cb.is-overdue {
+    color: var(--text-error, #e5484d);
+    border-color: var(--background-modifier-border);
+}
+
+.task-timeline-task.is-overdue .task-timeline-due-badge {
+    color: var(--text-error, #e5484d);
+}
+
+.task-timeline-cb-icon {
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1;
+    user-select: none;
+}
+
+.task-timeline-cb:hover {
+    border-color: var(--interactive-accent);
+}
+
+.task-timeline-task.is-done .task-timeline-cb {
+    background: var(--interactive-accent);
+    border-color: var(--interactive-accent);
+}
+
+/* Body */
+
+.task-timeline-task-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.task-timeline-task-text {
+    color: var(--text-normal);
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.task-timeline-task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.task-timeline-meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    white-space: nowrap;
+}
+
+.task-timeline-wikilink {
+    color: var(--link-color, var(--interactive-accent));
+    cursor: pointer;
+}
+
+.task-timeline-wikilink:hover {
+    text-decoration: underline;
+}
+
+.task-timeline-tag {
+    color: var(--tag-color, var(--interactive-accent));
+    opacity: 0.8;
+}
+
+.task-timeline-meta-src {
+    cursor: pointer;
+}
+
+.task-timeline-meta-src:hover {
+    color: var(--text-accent);
+    text-decoration: underline;
+}
+
+/* ── Icon sizing ────────────────────────────────────────────── */
+
+.task-timeline-breadcrumb svg,
+.task-timeline-meta-badge svg,
+.task-timeline-enter-icon svg {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* ── Empty state ────────────────────────────────────────────── */
+
+.task-timeline-empty {
+    text-align: center;
+    color: var(--text-faint);
+    padding: 32px 0;
+    font-size: 14px;
+}
