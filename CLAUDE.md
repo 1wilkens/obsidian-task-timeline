@@ -27,7 +27,7 @@ Passed via `input` when embedding the view:
 | `folder` | auto-detected | Daily notes folder |
 | `format` | `YYYY-MM-DD` | Daily notes filename format |
 | `inbox` | `""` | Path to inbox file whose tasks are always shown |
-| `tasksHeading` | `"Tasks"` | Heading used when creating tasks in a new daily note |
+| `taskSection` | `"Tasks"` | Heading used when creating tasks in a new daily note |
 
 ## Design
 
