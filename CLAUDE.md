@@ -29,6 +29,7 @@ Passed via `input` when embedding the view:
 | `inbox` | `""` | Path to inbox file whose tasks are always shown |
 | `taskSection` | `"Tasks"` | Heading used when creating tasks in a new daily note |
 | `color` | `"on"` | Coloring mode: `"on"` (full), `"warning"` (overdue only), `"off"` (none) |
+| `show_completed` | `false` | When `true`, show tasks completed today rendered as done in today's section |
 
 ## Design
 

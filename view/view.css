@@ -223,8 +223,16 @@
 }
 
 .task-timeline-task.is-done .task-timeline-cb {
-    background: var(--interactive-accent);
+    background: transparent;
     border-color: var(--interactive-accent);
+}
+
+.task-timeline-task.is-done .task-timeline-cb::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--interactive-accent);
 }
 
 /* Body */
@@ -322,8 +330,13 @@
 
 .task-timeline[data-color="warning"] .task-timeline-task.is-done .task-timeline-cb,
 .task-timeline[data-color="off"] .task-timeline-task.is-done .task-timeline-cb {
-    background: var(--text-faint);
+    background: transparent;
     border-color: var(--text-faint);
+}
+
+.task-timeline[data-color="warning"] .task-timeline-task.is-done .task-timeline-cb::after,
+.task-timeline[data-color="off"] .task-timeline-task.is-done .task-timeline-cb::after {
+    background: var(--text-faint);
 }
 
 .task-timeline[data-color="warning"] .task-timeline-wikilink,

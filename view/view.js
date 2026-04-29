@@ -11,7 +11,7 @@ const defaultFolder = app.vault.getConfig?.("newFileLocation") === "folder"
     ? (app.vault.getConfig?.("newFileFolderPath") || "")
     : "";
 const CONFIG = Object.assign(
-    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", taskSection: "Tasks", inbox: "", color: "on" },
+    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", taskSection: "Tasks", inbox: "", color: "on", show_completed: false },
     input || {}
 );
 
@@ -129,10 +129,29 @@ function hasQualifyingSignal(t) {
     return moment(fname, DAILY_FORMAT, true).isValid();
 }
 
-// ── Collect incomplete tasks ───────────────────────────────────
+// ── Collect tasks ──────────────────────────────────────────────
 const all = [];
+const completedToday = [];
 for (const page of getPages()) {
-    for (const t of page.file.tasks.where(t => !t.completed && hasQualifyingSignal(t))) {
+    for (const t of page.file.tasks.where(t => hasQualifyingSignal(t))) {
+        if (t.completed) {
+            if (!CONFIG.show_completed) continue;
+            const comp = dvDate(t.completion);
+            if (!comp || !comp.isSame(today, "day")) continue;
+            const { text, tags } = extractTags(stripMeta(t.text));
+            completedToday.push({
+                text,
+                tags,
+                due: null,
+                sched: null,
+                eff: today.clone(),
+                source: taskSource(t),
+                path: t.path,
+                line: t.line,
+                completed: true,
+            });
+            continue;
+        }
         const due = dvDate(t.due);
         const sched = dvDate(t.scheduled);
         const { text, tags } = extractTags(stripMeta(t.text));
@@ -258,7 +277,10 @@ const listContainer = root.createEl("div", { cls: "task-timeline-list" });
 
 function renderList() {
     listContainer.empty();
-    const pool = activeFilter === "all" ? all : buckets[activeFilter];
+    let pool;
+    if (activeFilter === "all") pool = all.concat(completedToday);
+    else if (activeFilter === "todo") pool = buckets.todo.concat(completedToday);
+    else pool = buckets[activeFilter];
 
     if (!pool.length) {
         listContainer.createEl("div", { cls: "task-timeline-empty", text: "No tasks" });
@@ -286,11 +308,12 @@ function renderList() {
             section.createEl("div", { cls: dateCls, text: label });
         }
 
-        const taskPriority = t => t.due ? 0 : t.sched ? 1 : 2;
+        const taskPriority = t => t.completed ? 3 : t.due ? 0 : t.sched ? 1 : 2;
         const sorted = tasks.slice().sort((a, b) => taskPriority(a) - taskPriority(b));
         sorted.forEach((t, i) => {
-            const isOverdue = t.eff && t.eff.isBefore(today, "day");
-            const isUnplanned = !t.eff;
+            const isCompleted = !!t.completed;
+            const isOverdue = !isCompleted && t.eff && t.eff.isBefore(today, "day");
+            const isUnplanned = !isCompleted && !t.eff;
             const isOnly = sorted.length === 1;
             const clsList = ["task-timeline-task"];
             if (isOnly)              clsList.push("is-only");
@@ -298,6 +321,7 @@ function renderList() {
             else if (i === sorted.length - 1) clsList.push("is-last");
             if (isOverdue)   clsList.push("is-overdue");
             if (isUnplanned) clsList.push("is-unplanned");
+            if (isCompleted) clsList.push("is-done");
             const row = section.createEl("div", { cls: clsList.join(" ") });
 
             // Checkbox circle
@@ -328,7 +352,7 @@ function renderList() {
                 if (editor) {
                     editor.setCursor({ line: t.line, ch: 0 });
                     app.commands.executeCommandById("obsidian-tasks-plugin:toggle-done");
-                    row.classList.add("is-done");
+                    row.classList.toggle("is-done");
                 }
 
                 if (openedNew) {
