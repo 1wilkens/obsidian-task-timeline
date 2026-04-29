@@ -26,9 +26,9 @@ Passed via `input` when embedding the view:
 | `pages` | `""` (whole vault) | Dataview pages scope — folder/tag string or `dv.pages(...)` expression |
 | `folder` | auto-detected | Daily notes folder |
 | `format` | `YYYY-MM-DD` | Daily notes filename format |
+| `task_section` | `"# Tasks"` | Heading used when creating tasks in a new daily note |
 | `inbox` | `""` | Path to inbox file whose tasks are always shown |
-| `taskSection` | `"Tasks"` | Heading used when creating tasks in a new daily note |
-| `color` | `"on"` | Coloring mode: `"on"` (full), `"warning"` (overdue only), `"off"` (none) |
+| `color` | `"on"` | Coloring mode: `"on"` (full), `"warning"` (overdue/due today only), `"off"` (none) |
 | `show_completed` | `false` | When `true`, show tasks completed today rendered as done in today's section |
 
 ## Design
