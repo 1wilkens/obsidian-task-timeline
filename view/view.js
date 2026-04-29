@@ -11,7 +11,7 @@ const defaultFolder = app.vault.getConfig?.("newFileLocation") === "folder"
     ? (app.vault.getConfig?.("newFileFolderPath") || "")
     : "";
 const CONFIG = Object.assign(
-    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", task_section: "Tasks", inbox: "", color: "on", show_completed: false },
+    { pages: "", folder: defaultFolder, format: "YYYY-MM-DD", task_section: "Tasks", inbox: "", color: "on", show_completed: false, animations: false },
     input || {}
 );
 
@@ -46,6 +46,25 @@ const ICONS = {
     tag: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
 };
 function setIcon(el, name) { if (ICONS[name]) el.innerHTML = ICONS[name]; }
+
+const CONFETTI_COLORS = ["#ffd23f", "#ff6b6b", "#4ecdc4", "#a78bfa", "#34d399", "#f472b6"];
+function celebrate(cb) {
+    cb.classList.remove("is-celebrating");
+    void cb.offsetWidth; // restart animation if clicked rapidly
+    cb.classList.add("is-celebrating");
+    const N = 10;
+    for (let i = 0; i < N; i++) {
+        const p = cb.createEl("span", { cls: "task-timeline-confetti" });
+        const angle = (i / N) * 360 + (Math.random() * 30 - 15);
+        const distance = 18 + Math.random() * 10;
+        p.style.setProperty("--angle", angle + "deg");
+        p.style.setProperty("--distance", distance + "px");
+        p.style.background = CONFETTI_COLORS[i % CONFETTI_COLORS.length];
+        p.style.animationDelay = Math.floor(Math.random() * 60) + "ms";
+        setTimeout(() => p.remove(), 900);
+    }
+    setTimeout(() => cb.classList.remove("is-celebrating"), 700);
+}
 
 // ── Pages scope ───────────────────────────────────────────────
 function getPages() {
@@ -351,8 +370,10 @@ function renderList() {
                 const editor = leaf.view?.editor;
                 if (editor) {
                     editor.setCursor({ line: t.line, ch: 0 });
+                    const becomingDone = !row.classList.contains("is-done");
                     app.commands.executeCommandById("obsidian-tasks-plugin:toggle-done");
                     row.classList.toggle("is-done");
+                    if (becomingDone && CONFIG.animations) celebrate(cb);
                 }
 
                 if (openedNew) {

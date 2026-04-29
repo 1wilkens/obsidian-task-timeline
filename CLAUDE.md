@@ -30,6 +30,7 @@ Passed via `input` when embedding the view:
 | `inbox` | `""` | Path to inbox file whose tasks are always shown |
 | `color` | `"on"` | Coloring mode: `"on"` (full), `"warning"` (overdue/due today only), `"off"` (none) |
 | `show_completed` | `false` | When `true`, show tasks completed today rendered as done in today's section |
+| `animations` | `false` | When `true`, play a celebration animation (pop + ring + confetti) on task completion |
 
 ## Design
 
