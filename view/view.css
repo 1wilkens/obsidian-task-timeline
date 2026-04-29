@@ -329,6 +329,7 @@
 .task-timeline[data-color="warning"] .task-timeline-wikilink,
 .task-timeline[data-color="off"] .task-timeline-wikilink {
     color: var(--text-normal);
+    text-decoration: underline;
 }
 
 .task-timeline[data-color="warning"] .task-timeline-tag,
