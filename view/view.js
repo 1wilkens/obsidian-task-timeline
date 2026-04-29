@@ -103,8 +103,13 @@ function renderTextWithLinks(el, text) {
         if (m) {
             const target = m[1].trim();
             const display = m[2] ? m[2].trim() : target.split("/").pop();
-            const link = el.createEl("span", { cls: "task-timeline-wikilink", text: display });
+            const link = el.createEl("a", {
+                cls: "internal-link task-timeline-wikilink",
+                text: display,
+                attr: { href: target, "data-href": target },
+            });
             link.addEventListener("click", e => {
+                e.preventDefault();
                 e.stopPropagation();
                 app.workspace.openLinkText(target, "");
             });
@@ -272,22 +277,25 @@ function renderList() {
         const dm = moment(dateKey);
         const section = listContainer.createEl("div", { cls: "task-timeline-section" });
 
-        // Date header — skip for today (already shown in main header)
-        if (!dm.isSame(today, "day")) {
+        // Date header — skip for today only when it's the sole section
+        if (!dm.isSame(today, "day") || groups.size > 1) {
             const dateCls = dm.isBefore(today, "day")
                 ? "task-timeline-section-date is-overdue"
                 : "task-timeline-section-date";
-            section.createEl("div", { cls: dateCls, text: dm.format("ddd, MMM D") });
+            const label = dm.isSame(today, "day") ? `Today – ${dm.format("ddd, MMM D")}` : dm.format("ddd, MMM D");
+            section.createEl("div", { cls: dateCls, text: label });
         }
 
-        tasks.forEach((t, i) => {
+        const taskPriority = t => t.due ? 0 : t.sched ? 1 : 2;
+        const sorted = tasks.slice().sort((a, b) => taskPriority(a) - taskPriority(b));
+        sorted.forEach((t, i) => {
             const isOverdue = t.eff && t.eff.isBefore(today, "day");
             const isUnplanned = !t.eff;
-            const isOnly = tasks.length === 1;
+            const isOnly = sorted.length === 1;
             const clsList = ["task-timeline-task"];
             if (isOnly)              clsList.push("is-only");
             else if (i === 0)        clsList.push("is-first");
-            else if (i === tasks.length - 1) clsList.push("is-last");
+            else if (i === sorted.length - 1) clsList.push("is-last");
             if (isOverdue)   clsList.push("is-overdue");
             if (isUnplanned) clsList.push("is-unplanned");
             const row = section.createEl("div", { cls: clsList.join(" ") });
@@ -338,7 +346,9 @@ function renderList() {
 
             // Due / scheduled badge
             if (t.due) {
-                const dueBadge = meta.createEl("span", { cls: "task-timeline-meta-badge task-timeline-due-badge" });
+                const isDueToday = t.due.isSame(today, "day");
+                const dueCls = "task-timeline-meta-badge task-timeline-due-badge" + (isDueToday ? " is-due-today" : "");
+                const dueBadge = meta.createEl("span", { cls: dueCls });
                 setIcon(dueBadge, "calendar");
                 dueBadge.appendText(" " + relDay(t.due));
             } else if (t.sched) {

@@ -259,9 +259,6 @@
 .task-timeline-wikilink {
     color: var(--link-color, var(--interactive-accent));
     cursor: pointer;
-}
-
-.task-timeline-wikilink:hover {
     text-decoration: underline;
 }
 
@@ -351,5 +348,13 @@
 }
 
 .task-timeline[data-color="off"] .task-timeline-task.is-overdue .task-timeline-due-badge {
+    color: var(--text-muted);
+}
+
+.task-timeline-due-badge.is-due-today {
+    color: var(--color-yellow, #e5b453);
+}
+
+.task-timeline[data-color="off"] .task-timeline-due-badge.is-due-today {
     color: var(--text-muted);
 }
