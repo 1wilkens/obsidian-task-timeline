@@ -341,7 +341,9 @@
 }
 
 .task-timeline[data-color="warning"] .task-timeline-wikilink,
-.task-timeline[data-color="off"] .task-timeline-wikilink {
+.task-timeline[data-color="warning"] .external-link,
+.task-timeline[data-color="off"] .task-timeline-wikilink,
+.task-timeline[data-color="off"] .external-link {
     color: var(--text-normal);
     text-decoration: underline;
 }

@@ -116,12 +116,13 @@ function extractTags(text) {
 }
 
 function renderTextWithLinks(el, text) {
-    const parts = text.split(/(\[\[[^\]]+\]\])/);
+    const parts = text.split(/(\[\[[^\]]+\]\]|\[[^\]]*\]\([^)]+\))/);
     for (const part of parts) {
-        const m = part.match(/^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]$/);
-        if (m) {
-            const target = m[1].trim();
-            const display = m[2] ? m[2].trim() : target.split("/").pop();
+        const wiki = part.match(/^\[\[([^\]|]+)(?:\|([^\]]+))?\]\]$/);
+        const md   = part.match(/^\[([^\]]*)\]\(([^)]+)\)$/);
+        if (wiki) {
+            const target = wiki[1].trim();
+            const display = wiki[2] ? wiki[2].trim() : target.split("/").pop();
             const link = el.createEl("a", {
                 cls: "internal-link task-timeline-wikilink",
                 text: display,
@@ -131,6 +132,21 @@ function renderTextWithLinks(el, text) {
                 e.preventDefault();
                 e.stopPropagation();
                 app.workspace.openLinkText(target, "");
+            });
+        } else if (md) {
+            const display = md[1].trim();
+            const target  = md[2].trim();
+            const isExternal = /^https?:\/\//.test(target);
+            const link = el.createEl("a", {
+                cls: isExternal ? "external-link" : "internal-link task-timeline-wikilink",
+                text: display,
+                attr: isExternal ? { href: target } : { href: target, "data-href": target },
+            });
+            link.addEventListener("click", e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isExternal) window.open(target, "_blank");
+                else app.workspace.openLinkText(target, "");
             });
         } else if (part) {
             el.appendText(part);
